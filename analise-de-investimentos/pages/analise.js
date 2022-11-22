@@ -3,10 +3,11 @@ import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 import { ErrorMessage } from "@hookform/error-message";
 import { useContext } from "react";
+import { InvestimentosContext } from "../context/InvestimentosContext";
 
 export default function Analise() {
   const router = useRouter();
-  // const { state, dispatch } = useContext();
+  const { state, dispatch } = useContext(InvestimentosContext);
 
   const {
     register,
@@ -15,19 +16,19 @@ export default function Analise() {
   } = useForm();
 
   const onSubmit = data => {
-    const { tipoDeAnalise, iInf, iRisco, iMer, numInvestimentos } = data;
+    const { tipoAnalise, iInf, iRisco, iMer, numInvestimentos } = data;
 
     const submitData = {
-      tipoDeAnalise,
+      tipoAnalise,
       iInf: parseInt(iInf, 10),
       iRisco: parseInt(iRisco, 10),
       iMer: parseInt(iMer, 10),
       numInvestimentos: parseInt(numInvestimentos, 10),
     };
 
-    // dispatch({ ...submitData });
+    dispatch({ ...submitData });
 
-    router.push("/tabela");
+    router.push("/investimentos");
   };
 
   return (
@@ -158,7 +159,7 @@ export default function Analise() {
               </div>
             </div>
             <div className="flex items-center flex-col pt-6">
-              <div className="">
+              <div className="h-28">
                 <p className="text-md">Qual o número de Investimentos?</p>
 
                 <div className="flex mb-20">
