@@ -114,11 +114,11 @@ function Tabela(props) {
               onSubmit={handleSubmit(onSubmit)}
               className=""
             >
-            <div className="flex">
+            <div className="flex flex-col">
               {
                 allValues.investimentos.map((fieldsInvestimento, investimentoIndex) => (
-                  <div key={investimentoIndex}>
-                    {`Investimento ${investimentoIndex}`}
+                  <div key={investimentoIndex} className='mt-4'>
+                    {`Investimento ${investimentoIndex + 1}`}
                     <table className="mx-4">
                       <thead className="bg-white border-b">
                         <tr>
@@ -179,7 +179,7 @@ function Tabela(props) {
                 ))
               }
             </div>
-              <div className="flex gap-2 pb-2 justify-end mr-8">
+              <div className="flex gap-2 pb-2 justify-end mr-12 mt-4">
                 <button
                   type="button"
                   className="border rounded border-red-500 bg-red-500 text-white text-sm w-32 mt-2 p-2"

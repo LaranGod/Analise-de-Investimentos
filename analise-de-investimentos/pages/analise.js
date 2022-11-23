@@ -166,8 +166,7 @@ export default function Analise() {
                   <input
                     className="border-2 h-8 w-full"
                     type="number"
-                    min="0"
-                    max="3"
+                    min="1"
                     {...register("numInvestimentos", {
                       valueAsNumber: true,
                       required: "Digite o número de Investimentos!",
