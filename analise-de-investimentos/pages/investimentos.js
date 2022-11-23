@@ -4,7 +4,6 @@ import { withRouter, useRouter } from "next/router";
 import { useForm, useFieldArray } from "react-hook-form";
 import styles from "../styles/Home.module.css";
 import { InvestimentosContext } from "../context/InvestimentosContext";
-import TabelaInvestimento from "../components/tabela";
 
 function Investimentos(props) {
   const router = useRouter();
@@ -44,55 +43,47 @@ function Investimentos(props) {
     };
 
     dispatch({ ...submitData });
-    setIsSubmited(true);
+    router.push("/tabelas");
   };
   return (
     <div className={`bg-gradient-to-r from-indigo-400 to-cyan-300  text-lg`}>
       <div className={styles.container}>
         <div className={styles.main}>
-          {
-            !isSubmited ? (
-              <form onSubmit={handleSubmit(onSubmit)}>
-                <div className="h-[500px] w-[400px] flex items-center flex-col border-4 pt-16 bg-white rounded-xl">
-                  <div className="h-72">
-                    {prazosInv.map((field, fieldIndex) => (
-                      <div key={`${field.id}-${fieldIndex}`}>
-                        <div className="mb-4">{`Prazo para o Investimento ${
-                          fieldIndex + 1
-                        }`}</div>
-                        <input
-                          {...register(`prazosInvestimentos.${fieldIndex}.prazo`, {
-                            required: "prazo não informado!",
-                          })}
-                          type="number"
-                          className="w-full border-2 h-8"
-                        />
-                      </div>
-                    ))}
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <div className="h-[500px] w-[400px] flex items-center flex-col border-4 pt-16 bg-white rounded-xl">
+              <div className="h-72">
+                {prazosInv.map((field, fieldIndex) => (
+                  <div key={`${field.id}-${fieldIndex}`}>
+                    <div className="mb-4">{`Prazo para o Investimento ${
+                      fieldIndex + 1
+                    }`}</div>
+                    <input
+                      {...register(`prazosInvestimentos.${fieldIndex}.prazo`, {
+                        required: "prazo não informado!",
+                      })}
+                      type="number"
+                      className="w-full border-2 h-8"
+                    />
                   </div>
-                  <div className="w-full flex flex-col items-center px-10">
-                    <button
-                      type="submit"
-                      className="border rounded border-green-500 bg-green-500 hover:bg-green-600 text-white text-md w-full p-2"
-                    >
-                      Prosseguir
-                    </button>
-                    <button
-                      type="button"
-                      className="border rounded border-red-500 bg-red-500 hover:bg-red-600 text-white text-md w-full p-2 mt-1"
-                      onClick={() => router.push("/")}
-                    >
-                      Voltar
-                    </button>
-                  </div>
-                </div>
-              </form>
-            ) : (
-              <div>
-                <TabelaInvestimento />
+                ))}
               </div>
-            )
-          }
+              <div className="w-full flex flex-col items-center px-10">
+                <button
+                  type="submit"
+                  className="border rounded border-green-500 bg-green-500 hover:bg-green-600 text-white text-md w-full p-2"
+                >
+                  Prosseguir
+                </button>
+                <button
+                  type="button"
+                  className="border rounded border-red-500 bg-red-500 hover:bg-red-600 text-white text-md w-full p-2 mt-1"
+                  onClick={() => router.push("/")}
+                >
+                  Voltar
+                </button>
+              </div>
+            </div>
+          </form>
         </div>
       </div>
     </div>
