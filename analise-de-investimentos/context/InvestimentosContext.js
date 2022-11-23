@@ -8,6 +8,7 @@ const initialValues = {
   iInf: null, 
   iRisco: null, 
   iMer: null,
+  prazosInvestimentos: [],
   investimentos: [],
   isSubmitted: false
 };
