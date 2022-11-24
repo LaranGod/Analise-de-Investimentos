@@ -9,6 +9,7 @@ import LeftArrow from "../public/left-arrow.svg";
 import TabelaPaybackMedio from "../components/TabelaPaybackMedio";
 import TabelaPaybackEfetivo from "../components/TabelaPaybackEfetivo";
 import TabelaPaybackAjustado from "../components/paybackAjustado";
+import TabelaVPL from "../components/TabelaVPL";
 
 function Resultados(props) {
   const router = useRouter();
@@ -72,7 +73,11 @@ function Resultados(props) {
         
         <h2 className="bold text-lg text-center mt-16">Payback Ajustado</h2>
         <TabelaPaybackAjustado />
+
+        <h2 className="bold text-lg text-center mt-16">VPL</h2>
+          <TabelaVPL />
       </div>
+
     </>
   );
 }
