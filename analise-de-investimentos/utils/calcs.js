@@ -11,10 +11,11 @@ const formatSaldo = (saldo) => {
 const calcPaybackMedio = (investimentos) => {
   const pbkTable = [];
   for (const investimento of investimentos) {
+    const valorInicial = Number(investimento[0].saida);
     const somaEntradas = investimento.reduce((sum, i) => sum + Number(i.entrada), 0);
     const mediaEntradas = somaEntradas / (investimento.length - 1);
 
-    const valorInicial = Number(investimento[0].saida);
+    const rentabilidade = (((somaEntradas / valorInicial)*100)-100).toFixed(2) + '%';
     const pbkAtual = (valorInicial / (mediaEntradas * (investimento.length - 1)) * (investimento.length - 1));
     // 1º -> subtrai a primeira entrada do valor inicial
     // proximos -> subtrai do saldo da row anterior 
@@ -42,7 +43,7 @@ const calcPaybackMedio = (investimentos) => {
       payback.push({ saida: null, entrada: mediaEntradas.toFixed(2), saldo: formatSaldo(saldo) });
     }
 
-    pbkTable.push({ tabela: payback, paybackYear: paybackIndex + 1, pbkAtual: pbkAtual.toFixed(2) });
+    pbkTable.push({ tabela: payback, paybackYear: paybackIndex + 1, pbkAtual: pbkAtual.toFixed(2), rentabilidade });
   }
   return pbkTable;
 }
@@ -51,6 +52,8 @@ const calcPaybackEfetivo = (investimentos) => {
   const pbkTable = [];
   for (const investimento of investimentos) {
     const valorInicial = Number(investimento[0].saida);
+    const sumRetornos = investimento.reduce((sum, i) => sum + Number(i.entrada), 0);
+    const rentabilidade = (((sumRetornos / valorInicial)*100)-100).toFixed(2) + '%';
     // 1º -> subtrai a primeira entrada do valor inicial
     // proximos -> subtrai do saldo da row anterior 
     const payback = [];
@@ -76,7 +79,7 @@ const calcPaybackEfetivo = (investimentos) => {
       if (!paybackIndex && saldo <= 0) paybackIndex = index;
       payback.push({ saida: null, entrada: periodo.entrada, saldo: formatSaldo(saldo) });
     }
-    pbkTable.push({ tabela: payback, paybackYear: paybackIndex + 1 });
+    pbkTable.push({ tabela: payback, paybackYear: paybackIndex + 1, rentabilidade });
   }
   return pbkTable;
 }
@@ -91,7 +94,7 @@ const calcPaybackAjustado = (investimentos, txRetorno) => {
     const valorInicial = Number(investimento[0].saida);
     
     const sumRetornosAjustados = investimento.reduce((sum, i, index) => sum + (Number(i.entrada) / Math.pow(txRetorno, index)), 0);
-    console.log('sumRetornosAjustados', sumRetornosAjustados);
+    const rentabilidade = (((sumRetornosAjustados / valorInicial)*100)-100).toFixed(2) + '%';
     const pbkAtual = (valorInicial / sumRetornosAjustados) * (investimento.length - 1);
 
     for (const [index, periodo] of investimento.entries()) {
@@ -116,14 +119,12 @@ const calcPaybackAjustado = (investimentos, txRetorno) => {
       payback.push({ original: periodo.entrada, descontado: fluxDescontado.toFixed(2), acumulado: formatSaldo(saldo) });
     }
 
-    pbkTable.push({ tabela: payback, paybackYear: paybackIndex + 1, pbkAtual: pbkAtual.toFixed(2), retornos: sumRetornosAjustados });
+    pbkTable.push({ tabela: payback, paybackYear: paybackIndex + 1, pbkAtual: pbkAtual.toFixed(2), retornos: sumRetornosAjustados, rentabilidade });
   }
   return pbkTable;
 }
 
 const calcVPL = (investimentos, paybackAjustado) => {
-  console.log('investimentos', investimentos);
-  console.log('paybackAjustado', paybackAjustado);
   const VPL = [];
   for (const [index, investimento] of investimentos.entries()) {
     const valorInicial = Number(investimento[0].saida);
@@ -134,6 +135,5 @@ const calcVPL = (investimentos, paybackAjustado) => {
   }
   return VPL;
 }
-
 
 export { calcPaybackMedio, calcPaybackEfetivo, calcPaybackAjustado, calcVPL };
