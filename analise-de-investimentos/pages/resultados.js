@@ -12,7 +12,7 @@ import TabelaPaybackAjustado from "../components/paybackAjustado";
 
 function Resultados(props) {
   const router = useRouter();
-
+  const { state } = useContext(InvestimentosContext);
 
   useEffect(() => {
     if (!props.router) {
