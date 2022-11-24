@@ -68,10 +68,10 @@ function Tabela(props) {
 
     const { investimentos } = data;
 
-    const { paybackMedio, paybackYear } = calcPaybackMedio(investimentos);
-    console.log("paybackMedio", { paybackMedio, paybackYear })
+    const { paybackMedio, paybackYear: paybackMedioYear } = calcPaybackMedio(investimentos);
+    console.log("paybackMedio", { paybackMedio, paybackMedioYear })
 
-    dispatch({ investimentos, paybackMedio, isSubmitted: false });
+    dispatch({ investimentos, paybackMedio, paybackMedioYear, isSubmitted: false });
   };
 
   const columnList = [

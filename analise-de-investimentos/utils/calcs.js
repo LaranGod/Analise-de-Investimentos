@@ -51,8 +51,8 @@ const calcPaybackMedio = (investimentos) => {
 
     return { paybackMedio: payback, paybackYear: paybackIndex + 1 };
   }
-  
-
 }
+
+
 
 export { calcPaybackMedio };
