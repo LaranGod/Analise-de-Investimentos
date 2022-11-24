@@ -9,11 +9,13 @@ const formatSaldo = (saldo) => {
 }
 
 const calcPaybackMedio = (investimentos) => {
+  const pbkTable = [];
   for (const investimento of investimentos) {
     const somaEntradas = investimento.reduce((sum, i) => sum + Number(i.entrada), 0);
     const mediaEntradas = somaEntradas / (investimento.length - 1);
 
     const valorInicial = Number(investimento[0].saida);
+    const pbkAtual = (valorInicial / (mediaEntradas * (investimento.length - 1)) * (investimento.length - 1));
     // 1º -> subtrai a primeira entrada do valor inicial
     // proximos -> subtrai do saldo da row anterior 
     const payback = [];
@@ -40,11 +42,13 @@ const calcPaybackMedio = (investimentos) => {
       payback.push({ saida: null, entrada: mediaEntradas.toFixed(2), saldo: formatSaldo(saldo) });
     }
 
-    return { paybackMedio: payback, paybackYear: paybackIndex + 1 };
+    pbkTable.push({ tabela: payback, paybackYear: paybackIndex + 1, pbkAtual: pbkAtual.toFixed(2) });
   }
+  return pbkTable;
 }
 
 const calcPaybackEfetivo = (investimentos) => {
+  const pbkTable = [];
   for (const investimento of investimentos) {
     const valorInicial = Number(investimento[0].saida);
     // 1º -> subtrai a primeira entrada do valor inicial
@@ -72,27 +76,31 @@ const calcPaybackEfetivo = (investimentos) => {
       if (!paybackIndex && saldo <= 0) paybackIndex = index;
       payback.push({ saida: null, entrada: periodo.entrada, saldo: formatSaldo(saldo) });
     }
-    return { paybackEfetivo: payback, paybackYear: paybackIndex }
+    pbkTable.push({ tabela: payback, paybackYear: paybackIndex + 1 });
   }
+  return pbkTable;
 }
 
 const calcPaybackAjustado = (investimentos, txRetorno) => {
-  console.log('investimentos', investimentos);
-  console.log('txRetorno', txRetorno);
-
-  const payback = [];
-  const saldos = [0];
-  let paybackIndex = null;
+  const pbkTable = [];
   for (const investimento of investimentos) {
-    const valorInicial = Number(investimento[0].saida);
-    for (const [index, periodo] of investimento.entries()) {
+    const payback = [];
+    const saldos = [0];
+    let paybackIndex = null;
 
+    const valorInicial = Number(investimento[0].saida);
+    
+    const sumRetornosAjustados = investimento.reduce((sum, i, index) => sum + (Number(i.entrada) / Math.pow(txRetorno, index)), 0);
+    console.log('sumRetornosAjustados', sumRetornosAjustados);
+    const pbkAtual = (valorInicial / sumRetornosAjustados) * (investimento.length - 1);
+
+    for (const [index, periodo] of investimento.entries()) {
       if (index === 0) {
         payback.push({ original: `(${periodo.saida})`, descontado: '0.00', acumulado: `(${periodo.saida})` });
         continue;
       }
 
-      const fluxDescontado = index === 1 ? Number(periodo.entrada) / txRetorno : Number(periodo.entrada) / Math.pow(txRetorno, index);
+      const fluxDescontado = Number(periodo.entrada) / Math.pow(txRetorno, index);
       if (index === 1) {
         const saldo = valorInicial - fluxDescontado;
         if (!paybackIndex && saldo <= 0) paybackIndex = index;
@@ -107,9 +115,25 @@ const calcPaybackAjustado = (investimentos, txRetorno) => {
       if (!paybackIndex && saldo <= 0) paybackIndex = index;
       payback.push({ original: periodo.entrada, descontado: fluxDescontado.toFixed(2), acumulado: formatSaldo(saldo) });
     }
-    return { paybackAjustado: payback, paybackYear: paybackIndex }
+
+    pbkTable.push({ tabela: payback, paybackYear: paybackIndex + 1, pbkAtual: pbkAtual.toFixed(2), retornos: sumRetornosAjustados });
   }
+  return pbkTable;
+}
+
+const calcVPL = (investimentos, paybackAjustado) => {
+  console.log('investimentos', investimentos);
+  console.log('paybackAjustado', paybackAjustado);
+  const VPL = [];
+  for (const [index, investimento] of investimentos.entries()) {
+    const valorInicial = Number(investimento[0].saida);
+    const retorno = paybackAjustado[index].retornos;
+
+    const vpl = retorno - valorInicial;
+    VPL.push(vpl);
+  }
+  return VPL;
 }
 
 
-export { calcPaybackMedio, calcPaybackEfetivo, calcPaybackAjustado };
+export { calcPaybackMedio, calcPaybackEfetivo, calcPaybackAjustado, calcVPL };

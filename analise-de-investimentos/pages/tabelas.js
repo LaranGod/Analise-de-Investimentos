@@ -3,7 +3,12 @@ import { withRouter, useRouter } from "next/router";
 import { useForm, useFieldArray } from "react-hook-form";
 import styles from "../styles/Home.module.css";
 import { InvestimentosContext } from "../context/InvestimentosContext";
-import { calcPaybackEfetivo, calcPaybackMedio, calcPaybackAjustado } from "../utils/calcs";
+import {
+  calcPaybackEfetivo,
+  calcPaybackMedio,
+  calcPaybackAjustado,
+  calcVPL,
+} from "../utils/calcs";
 
 function Tabela(props) {
   const router = useRouter();
@@ -14,19 +19,15 @@ function Tabela(props) {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
-    if (
-      !props.router ||
-      isNaN(state.numInvestimentos)
-    ) {
+    if (!props.router || isNaN(state.numInvestimentos)) {
       router.push("/");
     }
   }, [router, props.router, state]);
 
-  const newPrazosInvestimentos = prazosInvestimentos.map((prazo) => prazo + 1)
-  const arrPrazos = newPrazosInvestimentos.map((prazo) => Array.from(
-    Array(prazo || 0),
-    (_, i) => i
-  ));
+  const newPrazosInvestimentos = prazosInvestimentos.map(prazo => prazo + 1);
+  const arrPrazos = newPrazosInvestimentos.map(prazo =>
+    Array.from(Array(prazo || 0), (_, i) => i)
+  );
 
   const {
     control,
@@ -36,8 +37,8 @@ function Tabela(props) {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      investimentos: arrPrazos
-    }
+      investimentos: arrPrazos,
+    },
   });
   const { fields: todosInvestimentos } = useFieldArray({
     control,
@@ -50,7 +51,7 @@ function Tabela(props) {
     router.push("/");
   };
 
-  console.log("state tabela", state)
+  console.log("state tabela", state);
 
   const onSubmit = data => {
     setGeneralErrorMsg("");
@@ -68,32 +69,30 @@ function Tabela(props) {
 
     const { investimentos } = data;
 
-    const { paybackMedio, paybackYear: paybackMedioYear } = calcPaybackMedio(investimentos);
-    const { paybackEfetivo, paybackYear: paybackEfetivoYear } = calcPaybackEfetivo(investimentos);
-    const { paybackAjustado, paybackYear: paybackAjustadoYear } = calcPaybackAjustado(investimentos, state.txInternaRetorno);
-    console.log("paybackMedio", { paybackMedio, paybackMedioYear })
-    console.log("paybackEfetivo", { paybackEfetivo, paybackEfetivoYear })
-    console.log("paybackAjustado", { paybackAjustado, paybackAjustadoYear })
+    const paybackMedio = calcPaybackMedio(investimentos);
+    const paybackEfetivo = calcPaybackEfetivo(investimentos);
+    const paybackAjustado = calcPaybackAjustado(investimentos, state.txInternaRetorno);
+    const vpl = calcVPL(investimentos, paybackAjustado);
+    console.log("paybackMedio", paybackMedio);
+    console.log("paybackEfetivo", paybackEfetivo);
+    console.log("paybackAjustado", paybackAjustado);
+    console.log("vpl", vpl);
 
     dispatch({
       investimentos,
       paybackMedio,
-      paybackMedioYear,
       paybackEfetivo,
-      paybackEfetivoYear,
       paybackAjustado,
-      paybackAjustadoYear,
-      isSubmitted: false
+      vpl,
+      isSubmitted: false,
     });
   };
 
-  const columnList = [
-    'saida', 'entrada'
-  ]
+  const columnList = ["saida", "entrada"];
 
   const saveAnalysis = async () => {
     setIsSubmitting(true);
-  
+
     const nomeRelatorio = window.prompt("Nome do relatório:");
     try {
       if (nomeRelatorio) {
@@ -121,11 +120,10 @@ function Tabela(props) {
     }
   };
 
-  console.log('allValues.investimentos', allValues.investimentos);
+  console.log("allValues.investimentos", allValues.investimentos);
 
   return (
     <div className={`bg-gradient-to-r from-indigo-400 to-cyan-300  text-lg`}>
-
       <div className={styles.container}>
         <div className={styles.main}>
           {!state.isSubmitted && (
@@ -134,71 +132,71 @@ function Tabela(props) {
                 onSubmit={handleSubmit(onSubmit)}
                 className="flex flex-col items-center"
               >
-              <div className="flex mx-4 flex-col">
-                {
-                  allValues.investimentos.map((fieldsInvestimento, investimentoIndex) => (
-                    <div key={investimentoIndex} className='mt-4'>
-                      {`Investimento ${investimentoIndex + 1}`}
-                      <table className="mx-4 mt-2">
-                        <thead className="bg-white border-b">
-                          <tr>
-                            <th
-                              scope="col"
-                              className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
-                            >
-                              Data
-                            </th>
-                            <th
-                              scope="col"
-                              className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
-                            >
-                              Saída
-                            </th>
-                            <th
-                              scope="col"
-                              className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
-                            >
-                              Entrada
-                            </th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {/* RENDERIZA INVESTIMENTOS */}
-                          {fieldsInvestimento.map((field, fieldIndex) => (
-                            <tr
-                              className="bg-white border-b transition duration-300 ease-in-out hover:bg-gray-100"
-                              key={fieldIndex.id}
-                            >
-                              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                Ano {fieldIndex}
-                              </td>
-                              {columnList.map((i, colIndex) => (
-                                <td
-                                  className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
-                                  key={`${field.id}-${fieldIndex}-${colIndex}`}
-                                >
-                                  <input
-                                    {...register(
-                                      `investimentos.${investimentoIndex}.${fieldIndex}.${i}`,
-                                      {
-                                        required:
-                                          "Investimento não informado!",
-                                      }
-                                    )}
-                                    type="number"
-                                    className="w-20 text-center"
-                                    step="0.1"
-                                  />
-                                </td>
-                              ))}
+                <div className="flex mx-4 flex-col">
+                  {allValues.investimentos.map(
+                    (fieldsInvestimento, investimentoIndex) => (
+                      <div key={investimentoIndex} className="mt-4">
+                        {`Investimento ${investimentoIndex + 1}`}
+                        <table className="mx-4 mt-2">
+                          <thead className="bg-white border-b">
+                            <tr>
+                              <th
+                                scope="col"
+                                className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
+                              >
+                                Data
+                              </th>
+                              <th
+                                scope="col"
+                                className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
+                              >
+                                Saída
+                              </th>
+                              <th
+                                scope="col"
+                                className="text-sm font-medium text-gray-900 px-6 py-4 text-left"
+                              >
+                                Entrada
+                              </th>
                             </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  ))
-                }
-              </div>
+                          </thead>
+                          <tbody>
+                            {/* RENDERIZA INVESTIMENTOS */}
+                            {fieldsInvestimento.map((field, fieldIndex) => (
+                              <tr
+                                className="bg-white border-b transition duration-300 ease-in-out hover:bg-gray-100"
+                                key={fieldIndex.id}
+                              >
+                                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                  Ano {fieldIndex}
+                                </td>
+                                {columnList.map((i, colIndex) => (
+                                  <td
+                                    className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap"
+                                    key={`${field.id}-${fieldIndex}-${colIndex}`}
+                                  >
+                                    <input
+                                      {...register(
+                                        `investimentos.${investimentoIndex}.${fieldIndex}.${i}`,
+                                        {
+                                          required:
+                                            "Investimento não informado!",
+                                        }
+                                      )}
+                                      type="number"
+                                      className="w-20 text-center"
+                                      step="0.1"
+                                    />
+                                  </td>
+                                ))}
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    )
+                  )}
+                </div>
                 <div className="flex gap-2 pb-2 mt-8">
                   <button
                     type="button"
@@ -229,8 +227,7 @@ function Tabela(props) {
                 )} */}
               </form>
             </div>
-          )
-        }
+          )}
         </div>
       </div>
     </div>
