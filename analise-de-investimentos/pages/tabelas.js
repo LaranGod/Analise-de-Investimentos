@@ -72,22 +72,31 @@ function Tabelas(props) {
 
     const { investimentos } = data;
 
-    const paybackMedio = calcPaybackMedio(investimentos);
-    const paybackEfetivo = calcPaybackEfetivo(investimentos);
-    const paybackAjustado = calcPaybackAjustado(investimentos, state.txInternaRetorno);
-    const vpl = calcVPL(investimentos, paybackAjustado);
-    console.log("paybackMedio", paybackMedio);
-    console.log("paybackEfetivo", paybackEfetivo);
-    console.log("paybackAjustado", paybackAjustado);
-    console.log("vpl", vpl);
+    const { pbkTable: paybackMedio, melhor: melhorPbkMedio } = calcPaybackMedio(investimentos);
+    const { pbkTable: paybackEfetivo, melhor: melhorPbkEfetivo } = calcPaybackEfetivo(investimentos);
+    const { pbkTable: paybackAjustado,melhor: melhorPbkAjustado } = calcPaybackAjustado(investimentos, state.txInternaRetorno);
+    const { VPL: vpl, melhor: melhorVPL } = calcVPL(investimentos, paybackAjustado);
+
+    function mode(arr){
+      return arr.sort((a,b) =>
+            arr.filter(v => v===a).length
+          - arr.filter(v => v===b).length
+      ).pop();
+  }
+    const melhorInvestimento = mode([melhorPbkMedio, melhorPbkEfetivo, melhorPbkAjustado, melhorVPL]);
 
     dispatch({
       investimentos,
       paybackMedio,
+      melhorPbkMedio,
       paybackEfetivo,
+      melhorPbkEfetivo,
       paybackAjustado,
+      melhorPbkAjustado,
       vpl,
-      isSubmitted: false,
+      melhorVPL,
+      melhorInvestimento,
+      isSubmitted: true,
     });
     router.push("/resultados");
   };

@@ -90,6 +90,11 @@ function Resultados(props) {
 
         <h2 className="bold text-lg text-center mt-16">VPL</h2>
         <TabelaVPL />
+
+        <p className="text-lg text-center mt-6">
+        <strong>Melhor investimento geral:</strong> Investimento {state.melhorInvestimento + 1}{" "}
+        (maior quantidade de indicadores positivos)
+      </p>
       </div>
 
       <div className="w-56 my-10 items-center mx-auto">

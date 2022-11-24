@@ -10,9 +10,9 @@ export default function Relatorios() {
 
   console.log('state', state)
 
-  useEffect(() => {
-    if (state.isSubmitted) router.push("/tabelas");
-  }, [router, state.isSubmitted]);
+  // useEffect(() => {
+  //   if (state.isSubmitted) router.push("/tabelas");
+  // }, [router, state.isSubmitted]);
 
   useEffect(() => {
     fetch(`/api/listarInvestimentos`, {

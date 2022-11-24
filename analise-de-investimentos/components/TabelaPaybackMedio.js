@@ -85,9 +85,9 @@ function TabelaPaybackMedio() {
             </div>
           ))}
       </div>
-      {/* <p className="text-md text-center mt-6">
-        <strong>Melhor investimento:</strong> Investimento {1} (maior VME)
-      </p> */}
+      <p className="text-md text-center mt-6">
+        <strong>Melhor investimento:</strong> Investimento {state.melhorPbkMedio + 1} (maior rendimento)
+      </p>
     </div>
   );
 }
