@@ -7,13 +7,11 @@ import { InvestimentosContext } from "../context/InvestimentosContext";
 import { calcPaybackMedio } from "../utils/calcs";
 import LeftArrow from "../public/left-arrow.svg";
 import TabelaPaybackMedio from "../components/TabelaPaybackMedio";
+import TabelaPaybackEfetivo from "../components/TabelaPaybackEfetivo";
 
 function Resultados(props) {
   const router = useRouter();
-  const { state, dispatch, resetState } = useContext(InvestimentosContext);
-  const { paybackMedio, paybackMedioYear, paybackEfetivo, paybackEfetivoYear } = state;
 
-  console.log('paybackMed', paybackMedio)
 
   useEffect(() => {
     if (!props.router || isNaN(state.numInvestimentos)) {
@@ -29,8 +27,6 @@ function Resultados(props) {
   } = useForm({
     defaultValues: {},
   });
-
-  console.log("allValues", watch());
 
   const onSubmit = (data) => {};
 
@@ -70,9 +66,9 @@ function Resultados(props) {
         <h2 className="bold text-lg text-center">Payback Médio</h2>
         <TabelaPaybackMedio />
 
-        {/* <h2 className="bold text-lg text-center mt-6">POE</h2>
-        <TabelaPoe />
-
+        <h2 className="bold text-lg text-center mt-16">Payback Efetivo</h2>
+        <TabelaPaybackEfetivo />
+        {/*
         <h2 className="bold text-lg text-center mt-6">VEIP</h2>
         <TabelaVeip /> */}
       </div>

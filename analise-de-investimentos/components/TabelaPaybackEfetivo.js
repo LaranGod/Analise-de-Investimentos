@@ -5,14 +5,14 @@ import styles from "../styles/Home.module.css";
 import { InvestimentosContext } from "../context/InvestimentosContext";
 import LeftArrow from "../public/left-arrow.svg";
 
-function TabelaPaybackMedio() {
+function TabelaPaybackEfetivo() {
   const { state, dispatch, resetState } = useContext(InvestimentosContext);
-  const { paybackMedio } = state;
+  const { paybackEfetivo } = state;
   
 
   return (
     <div>
-      {paybackMedio.map((invest, investIndex) => (
+      {paybackEfetivo.map((invest, investIndex) => (
         <div key={investIndex} className='flex flex-col items-center mt-20'>
           <div className="mb-8">{`Investimento ${investIndex + 1}`}</div>
           <table>
@@ -73,7 +73,7 @@ function TabelaPaybackMedio() {
                 </tr>
               ))}
               <tr className="bg-white border-b transition duration-300 ease-in-out hover:bg-gray-100 text-center">
-                {invest.pbkAtual}
+                {invest.rentabilidade}
               </tr>
             </tbody>
           </table>
@@ -83,4 +83,4 @@ function TabelaPaybackMedio() {
   );
 }
 
-export default TabelaPaybackMedio;
+export default TabelaPaybackEfetivo;
