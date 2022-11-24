@@ -3,7 +3,7 @@ import { withRouter, useRouter } from "next/router";
 import { useForm, useFieldArray } from "react-hook-form";
 import styles from "../styles/Home.module.css";
 import { InvestimentosContext } from "../context/InvestimentosContext";
-import investimentos from "../pages/investimentos";
+import { calcPaybackMedio } from "../utils/calcs";
 
 function Tabela(props) {
   const router = useRouter();
@@ -12,8 +12,6 @@ function Tabela(props) {
   const { numInvestimentos, prazosInvestimentos } = state;
   const [generalErrorMsg, setGeneralErrorMsg] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-
 
   useEffect(() => {
     if (
@@ -25,10 +23,11 @@ function Tabela(props) {
   }, [router, props.router, state]);
 
   const newPrazosInvestimentos = prazosInvestimentos.map((prazo) => prazo + 1)
-  const arrPrazos = newPrazosInvestimentos.map((praso) => Array.from(
-    Array(praso || 0),
-    (_, i) => i + 1
+  const arrPrazos = newPrazosInvestimentos.map((prazo) => Array.from(
+    Array(prazo || 0),
+    (_, i) => i
   ));
+
   const {
     control,
     register,
@@ -37,7 +36,7 @@ function Tabela(props) {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      investimentos: arrPrazos.map((arrPraso) => arrPraso.map(i => ({})))
+      investimentos: arrPrazos
     }
   });
   const { fields: todosInvestimentos } = useFieldArray({
@@ -55,26 +54,31 @@ function Tabela(props) {
 
   const onSubmit = data => {
     setGeneralErrorMsg("");
-    const totalCenariosValue = data.cenarios.reduce(
-      (total, cenario) => total + parseInt(cenario.value, 10),
-      0
-    );
+    // const totalCenariosValue = data.cenarios.reduce(
+    //   (total, cenario) => total + parseInt(cenario.value, 10),
+    //   0
+    // );
 
-    if (totalCenariosValue !== 100) {
-      setGeneralErrorMsg(
-        "Total de probabilidades dos cenários deve ser igual a 100!"
-      );
-      return;
-    }
+    // if (totalCenariosValue !== 100) {
+    //   setGeneralErrorMsg(
+    //     "Total de probabilidades dos cenários deve ser igual a 100!"
+    //   );
+    //   return;
+    // }
 
     const { investimentos } = data;
 
-    dispatch({ investimentos, isSubmitted: true });
+    const paybackMedio = null;
+    // calcPaybackMedio(investimentos);
+    console.log("paybackMedio", paybackMedio)
+
+    dispatch({ investimentos, paybackMedio, isSubmitted: false });
   };
 
   const columnList = [
     'saida', 'entrada'
   ]
+
   const saveAnalysis = async () => {
     setIsSubmitting(true);
   
@@ -105,6 +109,8 @@ function Tabela(props) {
     }
   };
 
+  console.log('allValues.investimentos', allValues.investimentos);
+
   return (
     <div className={`bg-gradient-to-r from-indigo-400 to-cyan-300  text-lg`}>
 
@@ -114,14 +120,14 @@ function Tabela(props) {
             <div className="bg-gradient-to-r text-center py-4">
               <form
                 onSubmit={handleSubmit(onSubmit)}
-                className=""
+                className="flex flex-col items-center"
               >
-              <div className="flex mx-4">
+              <div className="flex mx-4 flex-col">
                 {
                   allValues.investimentos.map((fieldsInvestimento, investimentoIndex) => (
-                    <div key={investimentoIndex}>
+                    <div key={investimentoIndex} className='mt-4'>
                       {`Investimento ${investimentoIndex + 1}`}
-                      <table className="mx-4">
+                      <table className="mx-4 mt-2">
                         <thead className="bg-white border-b">
                           <tr>
                             <th
@@ -161,7 +167,7 @@ function Tabela(props) {
                                 >
                                   <input
                                     {...register(
-                                      `investimentos.${investimentoIndex}.${fieldIndex}-${colIndex}.value`,
+                                      `investimentos.${investimentoIndex}.${fieldIndex}.${i}`,
                                       {
                                         required:
                                           "Investimento não informado!",
@@ -181,7 +187,7 @@ function Tabela(props) {
                   ))
                 }
               </div>
-                <div className="flex gap-2 pb-2 justify-end mr-8 mt-8">
+                <div className="flex gap-2 pb-2 mt-8">
                   <button
                     type="button"
                     className="border rounded border-red-500 bg-red-500 text-white text-sm w-32 mt-2 p-2"

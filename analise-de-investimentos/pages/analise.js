@@ -26,7 +26,9 @@ export default function Analise() {
       numInvestimentos: parseInt(numInvestimentos, 10),
     };
 
-    dispatch({ ...submitData });
+    const txInternaRetorno = ((submitData.iInf/100) + 1) * ((submitData.iRisco/100) + 1) * ((submitData.iMer/100) + 1);
+
+    dispatch({ ...submitData, txInternaRetorno });
 
     router.push("/investimentos");
   };
@@ -47,7 +49,7 @@ export default function Analise() {
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="flex items-center flex-col">
               <div>
-                <p className="text-md">Qual a taxa de inflação?</p>
+                <p className="text-md">Qual a taxa de inflação (a.a)?</p>
                 <div className="flex mb-4">
                   <div className="input">
                     <input
@@ -70,7 +72,7 @@ export default function Analise() {
                 </div>
               </div>
               <div>
-                <p className="text-md">Qual a taxa de risco?</p>
+                <p className="text-md">Qual a taxa de risco (a.a)?</p>
                 <div className="flex mb-4">
                   <div className="input">
                     <input
@@ -167,6 +169,7 @@ export default function Analise() {
                     className="border-2 h-8 w-full"
                     type="number"
                     min="1"
+                    max="3"
                     {...register("numInvestimentos", {
                       valueAsNumber: true,
                       required: "Digite o número de Investimentos!",
