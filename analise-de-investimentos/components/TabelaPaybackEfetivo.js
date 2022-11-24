@@ -73,7 +73,7 @@ function TabelaPaybackEfetivo() {
                 </tr>
               ))}
               <tr className="bg-white border-b transition duration-300 ease-in-out hover:bg-gray-100 text-center">
-                {invest.rentabilidade}
+                Rentabilidade:{invest.rentabilidade}
               </tr>
             </tbody>
           </table>

@@ -5,14 +5,14 @@ import styles from "../styles/Home.module.css";
 import { InvestimentosContext } from "../context/InvestimentosContext";
 import LeftArrow from "../public/left-arrow.svg";
 
-function TabelaPaybackMedio() {
+function TabelaPaybackAjustado() {
   const { state, dispatch, resetState } = useContext(InvestimentosContext);
-  const { paybackMedio } = state;
+  const { paybackAjustado } = state;
   
 
   return (
     <div>
-      {paybackMedio.map((invest, investIndex) => (
+      {paybackAjustado.map((invest, investIndex) => (
         <div key={investIndex} className='flex flex-col items-center mt-20'>
           <div className="mb-8">{`Investimento ${investIndex + 1}`}</div>
           <table>
@@ -28,19 +28,19 @@ function TabelaPaybackMedio() {
                   scope="col"
                   className="text-sm font-medium text-gray-900 px-6 py-4 text-center"
                 >
-                  Saída
+                  Fluxo Original
                 </th>
                 <th
                   scope="col"
                   className="text-sm font-medium text-gray-900 px-6 py-4 text-center"
                 >
-                  Entrada
+                  Fluxo Descontado
                 </th>
                 <th
                   scope="col"
                   className="text-sm font-medium text-gray-900 px-6 py-4 text-center"
                 >
-                  Saldo
+                  Fluxo Acumulado
                 </th>
               </tr>
             </thead>
@@ -54,26 +54,26 @@ function TabelaPaybackMedio() {
                     Ano {fieldIndex}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                    {field.saida}
+                    {field.original}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                    {field.entrada}
+                    {field.descontado}
                   </td>
                   {
                     fieldIndex === invest.paybackYear -1 ? (
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium bg-green-500 text-gray-900">
-                        {field.saldo}
+                        {field.acumulado}
                       </td>
                     ) : (
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                        {field.saldo}
+                        {field.acumulado}
                       </td>
                     )
                   }
                 </tr>
               ))}
               <tr className="bg-white border-b transition duration-300 ease-in-out hover:bg-gray-100 text-center">
-                Rentabilidade:{invest.rentabilidade}
+                Rentabilidade: {invest.rentabilidade}
               </tr>
             </tbody>
           </table>
@@ -83,4 +83,4 @@ function TabelaPaybackMedio() {
   );
 }
 
-export default TabelaPaybackMedio;
+export default TabelaPaybackAjustado;

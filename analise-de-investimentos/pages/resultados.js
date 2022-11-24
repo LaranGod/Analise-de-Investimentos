@@ -8,16 +8,17 @@ import { calcPaybackMedio } from "../utils/calcs";
 import LeftArrow from "../public/left-arrow.svg";
 import TabelaPaybackMedio from "../components/TabelaPaybackMedio";
 import TabelaPaybackEfetivo from "../components/TabelaPaybackEfetivo";
+import TabelaPaybackAjustado from "../components/paybackAjustado";
 
 function Resultados(props) {
   const router = useRouter();
 
 
   useEffect(() => {
-    if (!props.router || isNaN(state.numInvestimentos)) {
+    if (!props.router) {
       router.push("/");
     }
-  }, [router, props.router, state]);
+  }, [router, props.router]);
   const {
     control,
     register,
@@ -68,9 +69,9 @@ function Resultados(props) {
 
         <h2 className="bold text-lg text-center mt-16">Payback Efetivo</h2>
         <TabelaPaybackEfetivo />
-        {/*
-        <h2 className="bold text-lg text-center mt-6">VEIP</h2>
-        <TabelaVeip /> */}
+        
+        <h2 className="bold text-lg text-center mt-16">Payback Ajustado</h2>
+        <TabelaPaybackAjustado />
       </div>
     </>
   );
