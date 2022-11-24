@@ -9,14 +9,17 @@ import {
   calcPaybackAjustado,
   calcVPL,
 } from "../utils/calcs";
+import LeftArrow from "../public/left-arrow.svg";
+import Image from "next/image";
 
-function Tabela(props) {
+function Tabelas(props) {
   const router = useRouter();
   const { state, dispatch, resetState } = useContext(InvestimentosContext);
 
   const { numInvestimentos, prazosInvestimentos } = state;
   const [generalErrorMsg, setGeneralErrorMsg] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isTableSubmitted, setIsTableSubmitted] = useState(false);
 
   useEffect(() => {
     if (!props.router || isNaN(state.numInvestimentos)) {
@@ -86,6 +89,7 @@ function Tabela(props) {
       vpl,
       isSubmitted: false,
     });
+    router.push("/resultados");
   };
 
   const columnList = ["saida", "entrada"];
@@ -126,12 +130,12 @@ function Tabela(props) {
     <div className={`bg-gradient-to-r from-indigo-400 to-cyan-300  text-lg`}>
       <div className={styles.container}>
         <div className={styles.main}>
-          {!state.isSubmitted && (
-            <div className="bg-gradient-to-r text-center py-4">
-              <form
-                onSubmit={handleSubmit(onSubmit)}
-                className="flex flex-col items-center"
-              >
+          <div className="bg-gradient-to-r text-center py-4">
+            <form
+              onSubmit={handleSubmit(onSubmit)}
+              className="flex flex-col items-center"
+            >
+              {!isTableSubmitted ? (
                 <div className="flex mx-4 flex-col">
                   {allValues.investimentos.map(
                     (fieldsInvestimento, investimentoIndex) => (
@@ -179,8 +183,7 @@ function Tabela(props) {
                                       {...register(
                                         `investimentos.${investimentoIndex}.${fieldIndex}.${i}`,
                                         {
-                                          required:
-                                            "Investimento não informado!",
+                                          required: false,
                                         }
                                       )}
                                       type="number"
@@ -196,42 +199,85 @@ function Tabela(props) {
                       </div>
                     )
                   )}
+                  <div className="flex gap-2 pb-2 mt-8">
+                    <button
+                      type="button"
+                      className="border rounded border-red-500 bg-red-500 text-white text-sm w-32 mt-2 p-2"
+                      onClick={reset}
+                    >
+                      Voltar
+                    </button>
+                    <button
+                      type="button"
+                      className="border rounded border-green-500 bg-green-500 text-white text-sm w-32 mt-2 p-2"
+                      onClick={() => setIsTableSubmitted(true)}
+                    >
+                      Prosseguir
+                    </button>
+                  </div>
                 </div>
-                <div className="flex gap-2 pb-2 mt-8">
-                  <button
-                    type="button"
-                    className="border rounded border-red-500 bg-red-500 text-white text-sm w-32 mt-2 p-2"
-                    onClick={reset}
-                  >
-                    Voltar
-                  </button>
-                  <button
-                    type="submit"
-                    className="border rounded border-green-500 bg-green-500 text-white text-sm w-32 mt-2 p-2"
-                  >
-                    Prosseguir
-                  </button>
-                </div>
-                {/* {errors.cenarios && (
-                  <p className="text-md text-red-500 mt-5">
-                    Informe todos os cenários!
-                  </p>
-                )}
-                {errors.investimentos && (
-                  <p className="text-md text-red-500 mt-5">
-                    Informe todos os investimentos!
-                  </p>
-                )}
-                {generalErrorMsg && (
-                  <p className="text-md text-red-500 mt-5">{generalErrorMsg}</p>
-                )} */}
-              </form>
-            </div>
-          )}
+              ) : (
+                <>
+                  <div className="w-[900px] flex items-center flex-col border-4 pt-16 bg-white rounded-xl">
+                    <h1 className="mb-10">Fluxo de caixa</h1>
+                    {allValues.investimentos.map(
+                      (investimento, investimentoIndex) => (
+                        <div
+                          className="flex flex-col h-80 w-full px-10 items-center border-y-2"
+                          key={investimentoIndex}
+                        >
+                          <div className="mb-8 place-self-start font-bold">{`Investimento ${
+                            investimentoIndex + 1
+                          }`}</div>
+                          {console.log("investimento <<<<", investimento)}
+                          <div className="flex h-60 items-center">
+                            {investimento.map((field, fieldIndex) => (
+                              <div
+                                className="mr-20 w-full text-center"
+                                key={`${investimentoIndex}-${fieldIndex}`}
+                              >
+                                {console.log("field <<<<", field)}
+                                {field.saida !== "" ? (
+                                  <div className="pt-24">
+                                    <LeftArrow className="-rotate-90 h-10" />
+                                    <div>{field.saida}</div>
+                                  </div>
+                                ) : (
+                                  <div className="pb-24">
+                                    <div>{field.entrada}</div>
+                                    <LeftArrow className="rotate-90 h-10" />
+                                  </div>
+                                )}
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )
+                    )}
+                    <div className="flex gap-2 pb-2 my-8">
+                      <button
+                        type="button"
+                        className="border rounded border-red-500 bg-red-500 text-white text-sm w-32 mt-2 p-2"
+                        onClick={reset}
+                      >
+                        Voltar
+                      </button>
+                      <button
+                        type="submit"
+                        className="border rounded border-green-500 bg-green-500 text-white text-sm w-32 mt-2 p-2"
+                      >
+                        Prosseguir
+                      </button>
+                    </div>
+                  </div>
+                </>
+              )}
+            </form>
+          </div>
         </div>
       </div>
     </div>
   );
 }
 
-export default withRouter(Tabela);
+export default withRouter(Tabelas);
