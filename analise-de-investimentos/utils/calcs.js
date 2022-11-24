@@ -10,19 +10,11 @@ const formatSaldo = (saldo) => {
 }
 
 const calcPaybackMedio = (investimentos) => {
-  console.log('investimentos', investimentos);
-
   for (const investimento of investimentos) {
-    console.log('investimento', investimento)
     const somaEntradas = investimento.reduce((sum, i) => sum + Number(i.entrada), 0);
     const mediaEntradas = somaEntradas / (investimento.length - 1);
 
-    console.log("somaEntradas", somaEntradas)
-    console.log('mediaEntradas', mediaEntradas)
-
     const valorInicial = Number(investimento[0].saida);
-    console.log('valorInicial', valorInicial);
-
     // 1º -> subtrai a primeira entrada do valor inicial
     // proximos -> subtrai do saldo da row anterior 
     const payback = [];
@@ -53,6 +45,38 @@ const calcPaybackMedio = (investimentos) => {
   }
 }
 
+const calcPaybackEfetivo = (investimentos) => {
+  for (const investimento of investimentos) {
+    const valorInicial = Number(investimento[0].saida);
+    // 1º -> subtrai a primeira entrada do valor inicial
+    // proximos -> subtrai do saldo da row anterior 
+    const payback = [];
+    let paybackIndex = null;
+    const saldos = [0];
+    for (const [index, periodo] of investimento.entries()) {
+      console.log('periodo', periodo);
+      if (index === 0) {
+        payback.push({ saida: valorInicial, entrada: null, saldo: null });
+        continue;
+      };
+
+      if (index === 1) {
+        const saldo = valorInicial - periodo.entrada;
+        if (!paybackIndex && saldo <= 0) paybackIndex = index;
+
+        saldos.push(saldo);
+        payback.push({ saida: null, entrada: periodo.entrada, saldo: formatSaldo(saldo) });
+        continue;
+      }
+
+      const saldo = Number(saldos[index - 1]) - periodo.entrada;
+      saldos.push(saldo);
+      if (!paybackIndex && saldo <= 0) paybackIndex = index;
+      payback.push({ saida: null, entrada: periodo.entrada, saldo: formatSaldo(saldo) });
+    }
+    return { paybackEfetivo: payback, paybackYear: paybackIndex }
+  }
+}
 
 
-export { calcPaybackMedio };
+export { calcPaybackMedio, calcPaybackEfetivo };

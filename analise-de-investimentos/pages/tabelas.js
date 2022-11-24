@@ -3,7 +3,7 @@ import { withRouter, useRouter } from "next/router";
 import { useForm, useFieldArray } from "react-hook-form";
 import styles from "../styles/Home.module.css";
 import { InvestimentosContext } from "../context/InvestimentosContext";
-import { calcPaybackMedio } from "../utils/calcs";
+import { calcPaybackEfetivo, calcPaybackMedio } from "../utils/calcs";
 
 function Tabela(props) {
   const router = useRouter();
@@ -69,9 +69,18 @@ function Tabela(props) {
     const { investimentos } = data;
 
     const { paybackMedio, paybackYear: paybackMedioYear } = calcPaybackMedio(investimentos);
+    const { paybackEfetivo, paybackYear: paybackEfetivoYear } = calcPaybackEfetivo(investimentos);
     console.log("paybackMedio", { paybackMedio, paybackMedioYear })
+    console.log("paybackEfetivo", { paybackEfetivo, paybackEfetivoYear })
 
-    dispatch({ investimentos, paybackMedio, paybackMedioYear, isSubmitted: false });
+    dispatch({
+      investimentos,
+      paybackMedio,
+      paybackMedioYear,
+      paybackEfetivo,
+      paybackEfetivoYear,
+      isSubmitted: false
+    });
   };
 
   const columnList = [
