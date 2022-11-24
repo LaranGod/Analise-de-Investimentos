@@ -11,7 +11,7 @@ import TabelaPaybackEfetivo from "../components/TabelaPaybackEfetivo";
 
 function Resultados(props) {
   const router = useRouter();
-
+  const { state } = useContext(InvestimentosContext);
 
   useEffect(() => {
     if (!props.router || isNaN(state.numInvestimentos)) {

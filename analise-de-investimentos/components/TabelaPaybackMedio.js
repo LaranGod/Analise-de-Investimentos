@@ -8,12 +8,11 @@ import LeftArrow from "../public/left-arrow.svg";
 function TabelaPaybackMedio() {
   const { state, dispatch, resetState } = useContext(InvestimentosContext);
   const { paybackMedio } = state;
-  
 
   return (
     <div>
-      {paybackMedio.map((invest, investIndex) => (
-        <div key={investIndex} className='flex flex-col items-center mt-20'>
+      {paybackMedio && paybackMedio.map((invest, investIndex) => (
+        <div key={investIndex  + Math.random()} className='flex flex-col items-center mt-20'>
           <div className="mb-8">{`Investimento ${investIndex + 1}`}</div>
           <table>
             <thead className="bg-white border-b">

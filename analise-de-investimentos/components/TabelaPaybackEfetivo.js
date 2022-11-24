@@ -8,12 +8,11 @@ import LeftArrow from "../public/left-arrow.svg";
 function TabelaPaybackEfetivo() {
   const { state, dispatch, resetState } = useContext(InvestimentosContext);
   const { paybackEfetivo } = state;
-  
 
   return (
     <div>
-      {paybackEfetivo.map((invest, investIndex) => (
-        <div key={investIndex} className='flex flex-col items-center mt-20'>
+      {paybackEfetivo && paybackEfetivo.map((invest, investIndex) => (
+        <div key={investIndex + Math.random()} className='flex flex-col items-center mt-20'>
           <div className="mb-8">{`Investimento ${investIndex + 1}`}</div>
           <table>
             <thead className="bg-white border-b">
@@ -48,7 +47,7 @@ function TabelaPaybackEfetivo() {
               {invest.tabela.map((field, fieldIndex) => (
                 <tr
                   className="bg-white border-b transition duration-300 ease-in-out hover:bg-gray-100 text-center"
-                  key={fieldIndex.id}
+                  key={field.id}
                 >
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                     Ano {fieldIndex}
