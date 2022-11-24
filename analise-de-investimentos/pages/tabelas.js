@@ -3,7 +3,7 @@ import { withRouter, useRouter } from "next/router";
 import { useForm, useFieldArray } from "react-hook-form";
 import styles from "../styles/Home.module.css";
 import { InvestimentosContext } from "../context/InvestimentosContext";
-import { calcPaybackEfetivo, calcPaybackMedio } from "../utils/calcs";
+import { calcPaybackEfetivo, calcPaybackMedio, calcPaybackAjustado } from "../utils/calcs";
 
 function Tabela(props) {
   const router = useRouter();
@@ -70,8 +70,10 @@ function Tabela(props) {
 
     const { paybackMedio, paybackYear: paybackMedioYear } = calcPaybackMedio(investimentos);
     const { paybackEfetivo, paybackYear: paybackEfetivoYear } = calcPaybackEfetivo(investimentos);
+    const { paybackAjustado, paybackYear: paybackAjustadoYear } = calcPaybackAjustado(investimentos, state.txInternaRetorno);
     console.log("paybackMedio", { paybackMedio, paybackMedioYear })
     console.log("paybackEfetivo", { paybackEfetivo, paybackEfetivoYear })
+    console.log("paybackAjustado", { paybackAjustado, paybackAjustadoYear })
 
     dispatch({
       investimentos,
@@ -79,6 +81,8 @@ function Tabela(props) {
       paybackMedioYear,
       paybackEfetivo,
       paybackEfetivoYear,
+      paybackAjustado,
+      paybackAjustadoYear,
       isSubmitted: false
     });
   };
