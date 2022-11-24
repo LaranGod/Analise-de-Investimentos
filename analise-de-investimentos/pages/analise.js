@@ -96,7 +96,7 @@ export default function Analise() {
               </div>
               <div>
                 <p className="text-md">Qual a taxa de remuneração real?</p>
-                <div className="flex mb-4">
+                <div className="flex">
                   <div className="input">
                     <input
                       className="border-2 h-8"
@@ -118,7 +118,7 @@ export default function Analise() {
                 </div>
               </div>
             </div>
-            <div className="flex items-center flex-col mt-8">
+            {/* <div className="flex items-center flex-col mt-8">
               <div className="w-3/5 flex items-center flex-col">
                 <p className="text-md mb-4">Selecione o tipo de análise a ser realizada</p>
 
@@ -159,7 +159,7 @@ export default function Analise() {
                   />
                 </div>
               </div>
-            </div>
+            </div> */}
             <div className="flex items-center flex-col pt-6">
               <div className="h-28">
                 <p className="text-md">Qual o número de Investimentos?</p>
