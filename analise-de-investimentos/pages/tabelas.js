@@ -136,7 +136,7 @@ function Tabelas(props) {
               className="flex flex-col items-center"
             >
               {!isTableSubmitted ? (
-                <div className="flex mx-4 flex-col">
+                <div className="flex mx-4 flex-col items-center">
                   {allValues.investimentos.map(
                     (fieldsInvestimento, investimentoIndex) => (
                       <div key={investimentoIndex} className="mt-4">

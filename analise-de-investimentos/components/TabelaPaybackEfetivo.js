@@ -10,9 +10,9 @@ function TabelaPaybackEfetivo() {
   const { paybackEfetivo } = state;
 
   return (
-    <div>
+    <div className="flex flex-row gap-16 justify-center">
       {paybackEfetivo && paybackEfetivo.map((invest, investIndex) => (
-        <div key={investIndex + Math.random()} className='flex flex-col items-center mt-20'>
+        <div key={investIndex + Math.random()} className='flex flex-col items-center mt-12'>
           <div className="mb-8">{`Investimento ${investIndex + 1}`}</div>
           <table>
             <thead className="bg-white border-b">
@@ -72,7 +72,7 @@ function TabelaPaybackEfetivo() {
                 </tr>
               ))}
               <tr className="bg-white border-b transition duration-300 ease-in-out hover:bg-gray-100 text-center">
-                Rentabilidade:{invest.rentabilidade}
+                Rentabilidade: {invest.rentabilidade}
               </tr>
             </tbody>
           </table>

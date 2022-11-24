@@ -28,7 +28,7 @@ export default function Analise() {
 
     const txInternaRetorno = ((submitData.iInf/100) + 1) * ((submitData.iRisco/100) + 1) * ((submitData.iMer/100) + 1);
 
-    dispatch({ ...submitData, txInternaRetorno });
+    dispatch({ ...submitData, txInternaRetorno, isSubmitted: true });
 
     router.push("/investimentos");
   };

@@ -11,8 +11,8 @@ function TabelaPaybackAjustado() {
   
 
   return (
-    <div>
-      {paybackAjustado.map((invest, investIndex) => (
+    <div className="flex flex-row gap-16 justify-center">
+      {paybackAjustado && paybackAjustado.map((invest, investIndex) => (
         <div key={investIndex} className='flex flex-col items-center mt-20'>
           <div className="mb-8">{`Investimento ${investIndex + 1}`}</div>
           <table>
@@ -73,7 +73,7 @@ function TabelaPaybackAjustado() {
                 </tr>
               ))}
               <tr className="bg-white border-b transition duration-300 ease-in-out hover:bg-gray-100 text-center">
-                Rentabilidade: {invest.rentabilidade}
+                Payback: {invest.pbkAtual} anos / Rentabilidade: {invest.rentabilidade}
               </tr>
             </tbody>
           </table>

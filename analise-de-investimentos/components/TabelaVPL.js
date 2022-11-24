@@ -11,7 +11,7 @@ function TabelaVPL() {
   
 
   return (
-    <div className="flex flex-col items-center mt-20">
+    <div className="flex flex-col items-center">
       <table>
         <thead className="bg-white border-b">
           <tr>
@@ -30,7 +30,7 @@ function TabelaVPL() {
           </tr>
         </thead>
         <tbody>
-          {vpl.map((value, valueIndex) => (
+          {vpl && vpl.map((value, valueIndex) => (
             <tr
               className="bg-white border-b transition duration-300 ease-in-out hover:bg-gray-100 text-center"
               key={valueIndex.id}
