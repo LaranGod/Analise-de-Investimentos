@@ -68,9 +68,8 @@ function Tabela(props) {
 
     const { investimentos } = data;
 
-    const paybackMedio = null;
-    // calcPaybackMedio(investimentos);
-    console.log("paybackMedio", paybackMedio)
+    const { paybackMedio, paybackYear } = calcPaybackMedio(investimentos);
+    console.log("paybackMedio", { paybackMedio, paybackYear })
 
     dispatch({ investimentos, paybackMedio, isSubmitted: false });
   };

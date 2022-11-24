@@ -26,8 +26,9 @@ const calcPaybackMedio = (investimentos) => {
     // 1º -> subtrai a primeira entrada do valor inicial
     // proximos -> subtrai do saldo da row anterior 
     const payback = [];
+    let paybackIndex = null;
+    const saldos = [0];
     for (const [index, periodo] of investimento.entries()) {
-      console.log('payback', payback);
       if (index === 0) {
         payback.push({ saida: valorInicial, entrada: null, saldo: null });
         continue;
@@ -35,20 +36,20 @@ const calcPaybackMedio = (investimentos) => {
 
       if (index === 1) {
         const saldo = valorInicial - mediaEntradas;
+        if (!paybackIndex && saldo <= 0) paybackIndex = index;
 
-        console.log('saldoh', {index, saldo})
-        
+        saldos.push(saldo);
         payback.push({ saida: null, entrada: mediaEntradas.toFixed(2), saldo: formatSaldo(saldo) });
         continue;
       }
 
-      console.log('idnex', index);
-      console.log('payback[index - 1]', payback[index - 1].saldo.replace(/(|)/g, ''))
-      const saldo = Number(payback[index - 1].saldo.replace(/(|)/g, '')) - mediaEntradas;
+      const saldo = Number(saldos[index - 1]) - mediaEntradas;
+      saldos.push(saldo);
+      if (!paybackIndex && saldo <= 0) paybackIndex = index;
       payback.push({ saida: null, entrada: mediaEntradas.toFixed(2), saldo: formatSaldo(saldo) });
     }
 
-    return payback;
+    return { paybackMedio: payback, paybackYear: paybackIndex + 1 };
   }
   
 
